@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DailyDev Journal</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <nav>
+            <h2>DailyDev<span>.</span></h2>
+            <a href="https://github.com/">GitHub</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="hero">
+
+            <p class="label">YOUR DAILY DEVELOPER INSPIRATION</p>
+
+            <h1>
+                One quote.<br>
+                One day.<br>
+                Keep building.
+            </h1>
+
+            <p class="description">
+                A collection of daily inspiration for developers,
+                collected automatically using Python and public APIs.
+            </p>
+
+        </section>
+
+        <section class="daily-card">
+
+            <p class="label">TODAY'S INSPIRATION</p>
+
+            <h2 id="quote">
+                Loading quote...
+            </h2>
+
+            <p id="author"></p>
+
+            <p id="date" class="date"></p>
+
+        </section>
+
+        <section class="history-section">
+
+            <h2>Previous Inspiration</h2>
+
+            <div id="history" class="history">
+                Loading history...
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>
+            Inspirational quotes provided by
+            <a href="https://zenquotes.io/" target="_blank"
+               rel="noopener noreferrer">ZenQuotes API</a>.
+        </p>
+
+        <p>Built with Python, GitHub Actions and GitHub Pages.</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

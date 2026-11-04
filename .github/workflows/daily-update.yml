@@ -1,0 +1,77 @@
+name: DailyDev Journal Automation
+
+on:
+  schedule:
+    - cron: "5 0 * * *"
+      timezone: "Asia/Colombo"
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: dailydev-deployment
+  cancel-in-progress: false
+
+jobs:
+  update-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Get repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Install Python
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # 3. Run API integration
+      - name: Update daily quote
+        run: python update.py
+
+      # 4. Commit updated JSON data
+      - name: Commit changes
+        env:
+          GIT_USER_NAME: ${{ vars.GIT_USER_NAME }}
+          GIT_USER_EMAIL: ${{ vars.GIT_USER_EMAIL }}
+        run: |
+          if [ -z "$GIT_USER_NAME" ] || [ -z "$GIT_USER_EMAIL" ]; then
+            echo "GitHub repository variables are missing."
+            exit 1
+          fi
+
+          git config user.name "$GIT_USER_NAME"
+          git config user.email "$GIT_USER_EMAIL"
+
+          git add site/data/quotes.json
+
+          if git diff --cached --quiet; then
+            echo "No new changes to commit."
+          else
+            git commit -m "chore: update daily developer journal"
+            git push
+          fi
+
+      # 5. Configure GitHub Pages
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      # 6. Upload website
+      - name: Upload website artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./site
+
+      # 7. Deploy website
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Display deployment URL
+        run: echo "Website deployed successfully!"
